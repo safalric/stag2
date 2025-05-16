@@ -1,13 +1,24 @@
 package pro1;
 
+import com.google.gson.Gson;
+import pro1.apiDataModel.Action;
+import pro1.apiDataModel.ActionsList;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class Main5 {
+    public static String roomsSummary(String department, int year) {
+        String json = Api.getActionsByDepartment(department, year);
+        ActionsList response = new Gson().fromJson(json, ActionsList.class);
+        List<Action> actions = response.items;
 
-    public static void main(String[] args) {
-        System.out.println(roomsSummary("KIKM",2024));
-    }
-
-    public static String roomsSummary(String department, int year)
-    {
-        return ""; // TODO 5.1: Vrať výpis učeben, které katedra v daném roce využila (seřadit abecedně, oddělit čárkou)
+        return actions.stream()
+                .map(a -> a.room)
+                .filter(Objects::nonNull)
+                .distinct()
+                .sorted()
+                .collect(Collectors.joining(","));
     }
 }

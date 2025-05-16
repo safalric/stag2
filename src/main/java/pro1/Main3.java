@@ -1,25 +1,36 @@
 package pro1;
 
-import pro1.apiDataModel.ActionsList;
+import com.google.gson.Gson;
+import pro1.apiDataModel.*;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class Main3 {
+    public static String emailOfBestTeacher(String department, int year) {
+        String jsonTeachers = Api.getTeachersByDepartment(department);
+        String jsonActions = Api.getActionsByDepartment(department, year);
+        Gson gson = new Gson();
 
-    public static void main(String[] args) {
-        System.out.println(emailOfBestTeacher("KIKM",2024));
+
+        TeachersList teachersResponse = gson.fromJson(jsonTeachers, TeachersList.class);
+        List<Teacher> teachers = teachersResponse.items;
+
+
+        ActionsList actionsResponse = gson.fromJson(jsonActions, ActionsList.class);
+        List<Action> actions = actionsResponse.items;
+
+
+        return teachers.stream()
+                .max(Comparator.comparing(t -> teacherScore(t.id, actions)))
+                .map(t -> t.email)
+                .orElse("?");
     }
 
-    public static String emailOfBestTeacher(String department, int year)
-    {
-        // TODO 3.2:
-        //  - Stáhni seznam učitelů na katedře
-        //  - Stáhni seznam akcí na katedře
-        //  - Najdi učitele s nejvyšším "score" a vrať jeho e-mail
-
-        return "";
-    }
-
-    public static long TeacherScore(long teacherId, ActionsList departmentSchedule)
-    {
-        return 0; // TODO 3.1: Doplň pomocnou metodu - součet všech přihlášených studentů na akcích daného učitele
+    private static long teacherScore(long teacherId, List<Action> actions) {
+        return actions.stream()
+                .filter(a -> a.teacherId == teacherId)
+                .mapToLong(a -> a.personsCount)
+                .sum();
     }
 }

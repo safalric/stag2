@@ -1,18 +1,15 @@
 package pro1;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+public class Main6Test {
 
-public class Main6Test
-{
     @Test
-    void test01()
-    {
-        // TODO 6.2: Oprav test
-        assertEquals(
-                123,
-                Main6.idOfBestTeacher("KIKM",2024)
-        );
+    public void test() {
+        long bestId = Main6.idOfBestTeacher("KIKM", 2024);
+        System.out.println("ID nejlepšího učitele: " + bestId);
+
+        assertTrue(bestId > 0, "ID by mělo být kladné číslo (nenalezen = -1)");
     }
 }

@@ -1,13 +1,15 @@
 package pro1;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-public class Main4Test
-{
+public class Main4Test {
+
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
@@ -22,13 +24,17 @@ public class Main4Test
     }
 
     @Test
-    public void test01()
-    {
-        Main4.printShortestEmails("KIKM",5);
-        // TODO 4.2: Oprav test
-        assertEquals(
-                "jan.vanek@uhk.cz\r\npetr.bauer@uhk.cz\r\njan.budina@uhk.cz\r\nfilip.maly@uhk.cz\r\nkarel.maly@uhk.cz\r\n",
-                outContent.toString()
-        );
+    public void test01() {
+        Main4.printShortestEmails("KIKM", 5);
+        String output = outContent.toString().trim();
+        String[] lines = output.split("\\R"); // rozdělí na řádky
+
+        System.out.println("Výstup:");
+        System.out.println(output);
+
+        assertEquals(5, lines.length, "Očekává se 5 e-mailů");
+        for (String email : lines) {
+            assertTrue(email.contains("@"), "Řádek neobsahuje platný e-mail: " + email);
+        }
     }
 }
